@@ -21,10 +21,10 @@ from django.shortcuts import render
 
 from products.views import public_products_page
 from chatbot.views import chatbot_page
-from accounts.views import login_view, logout_view
-from products.views import internal_products, approve_product_ui, create_product
-from products.views import edit_product, delete_product
-
+from products.views import internal_products, approve_product_ui
+from products.views import create_product, edit_product, delete_product
+from accounts.views import signup_view, login_view, logout_view
+from products.views import admin_dashboard, viewer_products
 
 def home(request):
     return render(request, 'home.html')
@@ -34,11 +34,14 @@ urlpatterns = [
 
     # UI Pages
     path("/", login_view),
-    path("logout/", logout_view),
-    
+    path("signup/", signup_view, name="signup"),
+    path("logout/", logout_view, name="logout"),
+
     path('home/', home, name='home'),
     path('products/public/', public_products_page, name='public-products-page'),
     path('chat/', chatbot_page, name='chat-page'),
+    path("admin/dashboard/", admin_dashboard, name="admin-dashboard"),
+    path("products/view/", viewer_products, name="viewer-products"),
 
     path("products/internal/", internal_products, name="internal-products"),
     path("products/<int:product_id>/approve/", approve_product_ui),
@@ -49,4 +52,3 @@ urlpatterns = [
     # API
     path('api/', include('chatbot.urls')),
 ]
-
