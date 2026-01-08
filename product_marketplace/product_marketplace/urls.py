@@ -47,6 +47,6 @@ urlpatterns = [
     path("products/<int:product_id>/delete/", delete_product, name="delete-product"),
 
     # API
-    path('api/', include('product_marketplace.api_urls')),
+    path('api/', include('chatbot.urls')),
 ]
 
