@@ -45,3 +45,10 @@ class PublicProductListView(ListAPIView):
     queryset = Product.objects.filter(status='approved')
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
+
+
+def public_products_page(request):
+    products = Product.objects.filter(status='approved')
+    return render(request, 'public_products.html', {
+        'products': products
+    })

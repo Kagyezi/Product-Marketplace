@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Approved Products</h2>
+
+{% if products %}
+    {% for product in products %}
+        <div class="card">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <strong>Price:</strong> ${{ product.price }}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No approved products available.</p>
+{% endif %}
+{% endblock %}

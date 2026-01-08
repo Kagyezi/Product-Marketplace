@@ -44,3 +44,38 @@ class ChatbotView(APIView):
         )
 
         return Response({"answer": answer})
+
+
+
+def chatbot_page(request):
+    answer = None
+
+    if request.method == "POST":
+        question = request.POST.get("question")
+
+        products = Product.objects.filter(status='approved')
+        product_list = "\n".join(
+            [f"{p.name}: ${p.price} - {p.description}" for p in products]
+        )
+
+        prompt = f"""
+        You are a product assistant.
+        Use only the products below.
+
+        Products:
+        {product_list}
+
+        Question:
+        {question}
+        """
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        answer = response['choices'][0]['message']['content']
+
+    return render(request, 'chat.html', {
+        'answer': answer
+    })

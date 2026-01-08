@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Marketplace</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        nav a { margin-right: 15px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/products/public/">Public Products</a>
+    <a href="/chat/">Chatbot</a>
+</nav>
+
+<hr>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

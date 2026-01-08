@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>AI Product Chatbot</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <input
+        type="text"
+        name="question"
+        placeholder="Ask about products..."
+        style="width: 70%; padding: 8px;"
+        required
+    >
+    <button type="submit">Ask</button>
+</form>
+
+{% if answer %}
+    <hr>
+    <h3>Answer</h3>
+    <p>{{ answer }}</p>
+{% endif %}
+{% endblock %}
