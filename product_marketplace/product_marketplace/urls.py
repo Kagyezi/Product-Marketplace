@@ -33,12 +33,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # UI Pages
-    path('', home, name='home'),
+    path("/", login_view),
+    path("logout/", logout_view),
+    
+    path('home/', home, name='home'),
     path('products/public/', public_products_page, name='public-products-page'),
     path('chat/', chatbot_page, name='chat-page'),
-
-    path("login/", login_view),
-    path("logout/", logout_view),
 
     path("products/internal/", internal_products, name="internal-products"),
     path("products/<int:product_id>/approve/", approve_product_ui),
