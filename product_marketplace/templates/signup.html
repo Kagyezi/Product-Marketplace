@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% comment %} {% extends "base.html" %} {% endcomment %}
 {% block content %}
 <h2>Sign Up</h2>
 
@@ -15,6 +15,7 @@
     </select><br><br>
 
     <button type="submit">Create Account</button>
+    <button type="submit"><a href="/">Login</a></button>
 </form>
 
 {% if error %}
