@@ -18,8 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render
+
 from products.views import public_products_page
 from chatbot.views import chatbot_page
+from accounts.views import login_view, logout_view
+from products.views import internal_products, approve_product_ui, create_product
+from products.views import edit_product, delete_product
+
 
 def home(request):
     return render(request, 'home.html')
@@ -31,6 +36,15 @@ urlpatterns = [
     path('', home, name='home'),
     path('products/public/', public_products_page, name='public-products-page'),
     path('chat/', chatbot_page, name='chat-page'),
+
+    path("login/", login_view),
+    path("logout/", logout_view),
+
+    path("products/internal/", internal_products, name="internal-products"),
+    path("products/<int:product_id>/approve/", approve_product_ui),
+    path("products/create/", create_product, name="create-product"),
+    path("products/<int:product_id>/edit/", edit_product, name="edit-product"),
+    path("products/<int:product_id>/delete/", delete_product, name="delete-product"),
 
     # API
     path('api/', include('product_marketplace.api_urls')),

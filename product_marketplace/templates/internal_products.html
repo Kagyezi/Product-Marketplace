@@ -1,0 +1,37 @@
+{% if user.role == "ADMIN" or user.role == "EDITOR" %}
+    <p><a href="/products/create/">➕ Create Product</a></p>
+{% endif %}
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Internal Products</h2>
+
+<table border="1" cellpadding="8">
+<tr>
+    <th>Name</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+
+{% for product in products %}
+<tr>
+    <td>{{ product.name }}</td>
+    <td>{{ product.status }}</td>
+    <td>
+    {% if user.role == "ADMIN" or user.role == "EDITOR" %}
+        <a href="/products/{{ product.id }}/edit/">Edit</a>
+        |
+        <a href="/products/{{ product.id }}/delete/">Delete</a>
+    {% endif %}
+
+    {% if user.role == "ADMIN" or user.role == "APPROVER" %}
+        {% if product.status != "approved" %}
+            | <a href="/products/{{ product.id }}/approve/">Approve</a>
+        {% endif %}
+    {% endif %}
+</td>
+
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
