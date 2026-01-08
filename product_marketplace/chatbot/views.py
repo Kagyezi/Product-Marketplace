@@ -1,14 +1,15 @@
 from django.shortcuts import render
 
-import openai
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from openai import OpenAI
+from django.conf import settings
 from products.models import Product
 from .models import ChatMessage
 
 # Create your views here.
 
-openai.api_key = "YOUR_API_KEY"
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 class ChatbotView(APIView):
     def post(self, request):
@@ -20,31 +21,40 @@ class ChatbotView(APIView):
         )
 
         prompt = f"""
-        You are a product assistant.
-        Answer only using the products below.
+You are a product assistant.
+Answer ONLY using the products below.
 
-        Products:
-        {product_list}
+Products:
+{product_list}
 
-        Question:
-        {question}
-        """
+Question:
+{question}
+"""
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
         )
 
-        answer = response['choices'][0]['message']['content']
+        answer = response.choices[0].message.content
 
         ChatMessage.objects.create(
-            user=request.user,
+            user=request.user if request.user.is_authenticated else None,
             question=question,
             answer=answer
         )
 
         return Response({"answer": answer})
 
+
+from django.shortcuts import render
+from openai import OpenAI
+from django.conf import settings
+from products.models import Product
+
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 def chatbot_page(request):
@@ -59,23 +69,23 @@ def chatbot_page(request):
         )
 
         prompt = f"""
-        You are a product assistant.
-        Use only the products below.
+You are a product assistant.
+Answer ONLY using the products below.
 
-        Products:
-        {product_list}
+Products:
+{product_list}
 
-        Question:
-        {question}
-        """
+Question:
+{question}
+"""
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
         )
 
-        answer = response['choices'][0]['message']['content']
+        answer = response.choices[0].message.content
 
-    return render(request, 'chat.html', {
-        'answer': answer
-    })
+    return render(request, "chat.html", {"answer": answer})
