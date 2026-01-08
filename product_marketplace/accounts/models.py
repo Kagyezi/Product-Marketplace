@@ -13,11 +13,9 @@ class Business(models.Model):
 
 class User(AbstractUser):
     ROLE_CHOICES = [
-        ('ADMIN', 'Admin'),
-        ('EDITOR', 'Editor'),
-        ('APPROVER', 'Approver'),
-        ('VIEWER', 'Viewer'),
-    ]
+    ('ADMIN', 'Admin'),
+    ('VIEWER', 'Viewer'),
+]
 
     business = models.ForeignKey(
         Business, on_delete=models.CASCADE, null=True, blank=True

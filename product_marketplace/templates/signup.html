@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Login</h2>
+<h2>Sign Up</h2>
 
 <form method="post">
     {% csrf_token %}
@@ -8,13 +8,13 @@
     <input name="username" placeholder="Username" required><br><br>
     <input name="password" type="password" placeholder="Password" required><br><br>
 
-    <label>Login as:</label>
+    <label>Role:</label>
     <select name="role" required>
         <option value="ADMIN">Admin</option>
         <option value="VIEWER">Viewer</option>
     </select><br><br>
 
-    <button type="submit">Login</button>
+    <button type="submit">Create Account</button>
 </form>
 
 {% if error %}

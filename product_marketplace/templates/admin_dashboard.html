@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<a href="/products/create/">Add Product</a>
+<hr>
+
+{% for product in products %}
+<div class="card">
+    <strong>{{ product.name }}</strong><br>
+    {{ product.description }}<br>
+    Price: ${{ product.price }}<br>
+
+    <a href="/products/{{ product.id }}/edit/">Edit</a> |
+    <a href="/products/{{ product.id }}/delete/">Delete</a>
+</div>
+{% empty %}
+<p>No products yet.</p>
+{% endfor %}
+{% endblock %}

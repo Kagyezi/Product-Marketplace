@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Available Products</h2>
+
+{% for product in products %}
+<div class="card">
+    <strong>{{ product.name }}</strong><br>
+    {{ product.description }}<br>
+    Price: ${{ product.price }}
+</div>
+{% empty %}
+<p>No products available.</p>
+{% endfor %}
+{% endblock %}

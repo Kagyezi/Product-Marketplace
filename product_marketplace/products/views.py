@@ -72,6 +72,14 @@ def approve_product_ui(request, product_id):
     return redirect("internal-products")
 
 @login_required
+def admin_dashboard(request):
+    if request.user.role != "ADMIN":
+        return HttpResponseForbidden("Admins only")
+
+    products = Product.objects.filter(business=request.user.business)
+    return render(request, "admin_dashboard.html", {"products": products})
+
+@login_required
 def create_product(request):
     # Role check
     if request.user.role not in ["ADMIN", "EDITOR"]:
@@ -135,3 +143,11 @@ def delete_product(request, product_id):
         return redirect("internal-products")
 
     return render(request, "delete_product.html", {"product": product})
+
+@login_required
+def viewer_products(request):
+    if request.user.role != "VIEWER":
+        return HttpResponseForbidden("Viewers only")
+
+    products = Product.objects.filter(status="approved")
+    return render(request, "viewer_products.html", {"products": products})
