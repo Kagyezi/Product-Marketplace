@@ -1,9 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
 {% if user.role == "ADMIN" or user.role == "EDITOR" %}
     <p><a href="/products/create/">➕ Create Product</a></p>
 {% endif %}
 
-{% extends "base.html" %}
-{% block content %}
 <h2>Internal Products</h2>
 
 <table border="1" cellpadding="8">

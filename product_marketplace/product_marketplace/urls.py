@@ -41,7 +41,7 @@ urlpatterns = [
     path('home/', home, name='home'),
     path('products/public/', public_products_page, name='public-products-page'),
     path('chat/', chatbot_page, name='chat-page'),
-    path("admin/dashboard/", admin_dashboard, name="admin-dashboard"),
+    path("admins/dashboard/", admin_dashboard, name="admin-dashboard"),
     path("products/view/", viewer_products, name="viewer-products"),
 
     path("products/internal/", internal_products, name="internal-products"),
