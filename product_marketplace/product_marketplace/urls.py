@@ -33,7 +33,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # UI Pages
-    path(" /", login_view, name="login"),
+    # path("/", login_view, name="login"),
+    path("login/", login_view, name="login"),
     path("signup/", signup_view, name="signup"),
     path("logout/", logout_view, name="logout"),
 
