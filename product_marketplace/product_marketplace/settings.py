@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 
     'accounts',
     'products',
-    'chatbot',
 ]
 
 
@@ -146,9 +145,3 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 }
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

@@ -20,7 +20,6 @@ from django.urls import path, include
 from django.shortcuts import render
 
 from products.views import public_products_page
-from chatbot.views import chatbot_page
 from products.views import internal_products, approve_product_ui
 from products.views import create_product, edit_product, delete_product
 from accounts.views import signup_view, login_view, logout_view
@@ -40,7 +39,6 @@ urlpatterns = [
 
     path('home/', home, name='home'),
     path('products/public/', public_products_page, name='public-products-page'),
-    path('chat/', chatbot_page, name='chat-page'),
     path("admins/dashboard/", admin_dashboard, name="admin-dashboard"),
     path("products/view/", viewer_products, name="viewer-products"),
 
@@ -51,5 +49,4 @@ urlpatterns = [
     path("products/<int:product_id>/delete/", delete_product, name="delete-product"),
 
     # API
-    path('api/', include('chatbot.urls')),
 ]
