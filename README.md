@@ -1,173 +1,251 @@
-# Product-Marketplace
-The aim of this project is to build a small system where businesses can manage products for sale.
+# Product Marketplace Backend
 
-Product Marketplace Backend with AI Chatbot
-Overview
+This project is a **simplified Django backend system** for managing products with **role-based access control**, exposing both **HTML-based views** and **REST API endpoints**.
 
-This project implements a backend system for managing business products with role-based permissions, approval workflows, and an AI-powered chatbot.
+The focus of this submission is on:
 
-Businesses can create products, manage users with different roles, and control which products are visible to the public.
-Only approved products are exposed externally and to the AI chatbot.
+* Backend correctness
+* Clear permission enforcement
+* Clean separation of concerns
+* Readable and maintainable code
 
-The frontend was intentionally excluded to focus on backend correctness, clarity, and reasoning, as allowed by the assignment.
+The project intentionally avoids over-engineering and demonstrates a solid **beginner-to-intermediate backend design**.
 
-Features Implemented
-✅ Backend (Django + DRF)
+---
 
-JWT-based authentication
+## Features Overview
 
-Multi-business support
+### User Roles
 
-Custom user model with roles:
+The system supports **two roles**:
 
-Admin
+* **Admin**
 
-Editor
+  * Create products
+  * Update products
+  * Delete products
+  * View all products belonging to their business
 
-Approver
+* **Viewer**
 
-Viewer
+  * View products only (read-only access)
 
-Product lifecycle:
+Roles are enforced at the **backend level**, not just in the UI.
 
-Draft
+---
 
-Pending approval
+### Product Management
 
-Approved
+* Products are created by Admin users
+* Products are **immediately public** once created
+* No approval or draft workflow
+* Each product belongs to a business owned by an Admin
 
-Role-based permission enforcement
+This design keeps the system simple and predictable while still enforcing proper access control.
 
-Public endpoint exposing approved products only
+---
 
-✅ AI Chatbot
+## Tech Stack
 
-Users can ask questions about products
+* **Backend Framework:** Django
+* **API Layer:** Django REST Framework (DRF)
+* **Authentication:**
 
-Chatbot only has access to approved products
+  * Session-based authentication for HTML views
+  * JWT authentication for API endpoints
+* **Database:** SQLite (development)
+* **Environment Variables:** python-dotenv
 
-AI responses generated using OpenAI API
+---
 
-Chat history stored (question, answer, timestamp)
+## Setup Instructions
 
-Tech Stack
+### 1. Clone the Repository
 
-Backend: Django, Django REST Framework
+```bash
+git clone <your-repo-url>
+cd product-marketplace
+```
 
-Authentication: JWT (SimpleJWT)
+---
 
-AI Integration: OpenAI API
+### 2. Create and Activate a Virtual Environment
 
-Database: SQLite (default, easily replaceable)
-
-Business Rules Enforced
-Action	Allowed Roles
-Create / edit product	Admin, Editor
-Approve product	Admin, Approver
-View all products	Internal users
-View approved products	Public
-Chatbot visibility	Approved products only
-
-All rules are enforced at the API level, not the frontend.
-
-Project Structure
-accounts/   → Users, roles, businesses  
-products/   → Product models, permissions, endpoints  
-chatbot/    → AI chatbot & chat history  
-
-
-Each app has a clear responsibility to keep the system simple and maintainable.
-
-API Endpoints
-Authentication
-POST /api/auth/login/
-
-Products (Internal)
-GET    /api/products/
-POST   /api/products/
-PUT    /api/products/{id}/
-POST   /api/products/{id}/approve/
-
-Products (Public)
-GET /api/products/public/
-
-AI Chatbot
-POST /api/chat/
-
-AI Chatbot Design
-
-The chatbot follows a controlled prompt strategy:
-
-Queries approved products from the database
-
-Injects product data into the AI prompt
-
-Prevents hallucinations by restricting context
-
-Stores each interaction for traceability
-
-This approach prioritizes data safety and correctness over complexity.
-
-Setup Instructions
-1. Clone repository
-git clone https://github.com/your-username/product-marketplace-backend.git
-cd product-marketplace-backend
-
-2. Create virtual environment
+```bash
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate   # Linux / macOS
+venv\Scripts\activate      # Windows
+```
 
-3. Install dependencies
+---
+
+### 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-4. Environment variables
+---
 
-Create a .env file using .env.example as reference.
+### 4. Environment Variables
 
-5. Migrate & run
+Create a `.env` file in the project root:
+
+```env
+SECRET_KEY=your_django_secret_key
+DEBUG=True
+```
+
+> ⚠️ The `.env` file is excluded from version control and should not be committed.
+
+---
+
+### 5. Apply Database Migrations
+
+```bash
 python manage.py makemigrations
 python manage.py migrate
+```
+
+---
+
+### 6. (Optional) Create a Superuser
+
+```bash
 python manage.py createsuperuser
+```
+
+---
+
+### 7. Run the Development Server
+
+```bash
 python manage.py runserver
+```
 
-Assumptions & Simplifications
+The application will be available at:
 
-One business per user
+```
+http://127.0.0.1:8000/
+```
 
-Roles are static and enum-based
+---
 
-Approval is a simple status transition
+## Authentication & Authorization
 
-SQLite used for simplicity
+* Users sign up and log in using Django’s authentication system
+* During signup/login, users select a role:
 
-No frontend included by design
+  * **Admin**
+  * **Viewer**
+* Role-based access is enforced:
 
-Tradeoffs & Design Decisions
+  * Admins can modify data
+  * Viewers have read-only access
+* API endpoints use **JWT authentication**
+* HTML views use **session-based authentication**
 
-Used role-based permissions instead of object-level ACLs to keep logic readable
+This ensures consistent behavior across both UI and API layers.
 
-AI chatbot uses prompt-injection rather than full RAG for simplicity
+---
 
-Frontend omitted to focus on backend fundamentals
+## API Overview
 
-Possible Improvements
+The project exposes REST API endpoints for product management.
 
-Add automated tests
+### Public Endpoints
 
-Pagination & filtering
+* `GET /api/products/public/`
+  Returns all products (read-only, no authentication required)
 
-Role management UI
+### Admin Endpoints (JWT required)
 
-Advanced AI retrieval (RAG)
+* `GET /api/products/`
+* `POST /api/products/`
+* `GET /api/products/<id>/`
+* `PUT /api/products/<id>/`
+* `DELETE /api/products/<id>/`
 
-Rate limiting & caching
+Only Admin users can create, update, or delete products.
+Viewers receive `403 Forbidden` for restricted actions.
 
-Final Notes
+---
 
-This project prioritizes clarity, correctness, and reasoning over feature completeness.
-It demonstrates strong fundamentals in backend design, permissions, and safe AI integration.
+## Tech Decisions & Assumptions
 
-👤 Author
+### Role Simplification
 
-Kagyezi Davis
-Electrical Engineer | Backend & AI Enthusiast
+Only **Admin** and **Viewer** roles were implemented to:
+
+* Reduce complexity
+* Keep permissions explicit and easy to reason about
+* Avoid redundant approval workflows
+
+---
+
+### No Approval Workflow
+
+Products become visible immediately after creation.
+
+This was a deliberate decision to:
+
+* Eliminate hidden states
+* Avoid unnecessary business logic
+* Make system behavior transparent
+
+---
+
+### Backend-First Design
+
+* Business rules live in the backend
+* UI is intentionally minimal
+* API and UI share the same permission logic
+* No duplication of rules across layers
+
+---
+
+### Database Choice
+
+* SQLite is used for development simplicity
+* The schema is compatible with PostgreSQL/MySQL for production use
+
+---
+
+## Known Limitations
+
+* No pagination or search on product listings
+* No automated test suite included
+* SQLite is not suitable for production scale
+* Basic UI intended only to demonstrate backend behavior
+
+### Planned but Not Implemented
+
+* An **AI-powered chatbot** for querying product information
+  This was planned as an enhancement but excluded from the final submission to prioritize core backend correctness and time constraints.
+
+---
+
+## Additional Notes
+
+* The project is structured to be easily extended
+* Possible future improvements include:
+
+  * Product search and filtering
+  * Pagination
+  * AI chatbot integration
+  * Improved frontend
+  * Automated testing
+
+---
+
+## Summary
+
+This project demonstrates:
+
+* Clean Django project structure
+* Correct role-based access control
+* Clear separation between UI and API
+* Thoughtful scope management
+
+The implementation focuses on **clarity, correctness, and extensibility**, making it a strong foundation for further development.
+
