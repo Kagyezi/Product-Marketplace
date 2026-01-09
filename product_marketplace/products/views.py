@@ -44,13 +44,14 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class PublicProductListView(ListAPIView):
-    queryset = Product.objects.filter(status='approved')
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
 
 def public_products_page(request):
-    products = Product.objects.filter(status='approved')
+    # products = Product.objects.filter(status='approved')
+    products = Product.objects.all()
     return render(request, 'public_products.html', {
         'products': products
     })
@@ -76,8 +77,12 @@ def admin_dashboard(request):
     if request.user.role != "ADMIN":
         return HttpResponseForbidden("Admins only")
 
-    products = Product.objects.filter(business=request.user.business)
+    products = Product.objects.filter(
+        business=request.user.business
+    )
+
     return render(request, "admin_dashboard.html", {"products": products})
+
 
 @login_required
 def create_product(request):
@@ -94,10 +99,9 @@ def create_product(request):
             name=name,
             description=description,
             price=price,
-            status="pending",
-            created_by=request.user,
-            business=request.user.business,
+            business=request.user.business
         )
+
 
         return redirect("internal-products")
 
@@ -119,7 +123,7 @@ def edit_product(request, product_id):
         product.name = request.POST.get("name")
         product.description = request.POST.get("description")
         product.price = request.POST.get("price")
-        product.status = "pending"  # re-approval required
+        # product.status = "pending"  # re-approval required
         product.save()
 
         return redirect("internal-products")
@@ -149,5 +153,5 @@ def viewer_products(request):
     if request.user.role != "VIEWER":
         return HttpResponseForbidden("Viewers only")
 
-    products = Product.objects.filter(status="approved")
+    products = Product.objects.all()
     return render(request, "viewer_products.html", {"products": products})
